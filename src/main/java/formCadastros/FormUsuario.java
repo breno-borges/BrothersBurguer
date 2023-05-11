@@ -76,6 +76,7 @@ public class FormUsuario extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Usuario");
+        setAlwaysOnTop(true);
 
         tblUsuario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -214,8 +215,8 @@ public class FormUsuario extends javax.swing.JDialog {
      * @param evt
      */
     private void btnIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirActionPerformed
-        /*formCadU = new FormCadUsuario(null, true);
-        formCadU.setVisible(true);*/
+        formCadU = new FormCadUsuario(null, true);
+        formCadU.setVisible(true);
     }//GEN-LAST:event_btnIncluirActionPerformed
 
     /**
@@ -229,22 +230,29 @@ public class FormUsuario extends javax.swing.JDialog {
     }//GEN-LAST:event_btnSairActionPerformed
 
     /**
-     * Botão para excluir usuario a partir do conteúdo selecionado na tabela
-     * Uso o metodo getSelectedRow da JTable
-     * Esse metodo pega a linha, porém como se fosse um vetor
-     * Para achar o meu Id, pego a linha selecionada e somo 1
+     * Botão para excluir usuario a partir do conteúdo selecionado na tabela.
+     * geSelectedRow() usado para pegar a linha selecionada na tabela.
+     * getColumnModel.getColumnIndex("Id") usado para pegar o índice da coluna Id na tabela.
+     * getValueAt(linhaselecionada, indiceColunaId) para pegar o valor do índice na linha e coluna selecionada.
+     * Usado parseInt para converter o Objeto em inteiro e depois 
+     * usar chamando a classe Usuario e o metodo de excluir o usuario.
      * @param evt 
      */
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        int linhaSelecionada = tblUsuario.getSelectedRow() + 1;
+        int linhaSelecionada = tblUsuario.getSelectedRow();
         DefaultTableModel tableUsers = (DefaultTableModel) tblUsuario.getModel();
         
+        int obterIndiceColunaId = tblUsuario.getColumnModel().getColumnIndex("Id");
+        Object obterValorId = tableUsers.getValueAt(linhaSelecionada, obterIndiceColunaId);
+        
+        int id = Integer.parseInt(obterValorId.toString());
+        
         Usuario user = new Usuario();
-        user.setId(linhaSelecionada);
+        user.setId(id);
         daoU = new DAOUsuario();
         daoU.delete(user);
         
-        tableUsers.removeRow(linhaSelecionada - 1);
+        tableUsers.removeRow(linhaSelecionada);
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**

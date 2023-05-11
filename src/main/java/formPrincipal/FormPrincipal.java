@@ -132,6 +132,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     private void menuUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuUsuarioActionPerformed
         formU = new FormUsuario(this, true);
         formU.setVisible(true);
+        dispose();
     }//GEN-LAST:event_menuUsuarioActionPerformed
 
     /**

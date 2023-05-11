@@ -128,7 +128,6 @@ public class DAOUsuario {
      */
     public boolean delete(Usuario usuario) {
         PreparedStatement stmt = null;
-
         try {
             stmt = con.prepareStatement("DELETE FROM usuarios WHERE id = ?");
 
