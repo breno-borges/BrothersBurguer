@@ -6,6 +6,7 @@ package formCadastros;
 
 import formPrincipal.FormPrincipal;
 import dados.Usuario;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import manipulacaoDeDados.DAOUsuario;
 
@@ -18,7 +19,19 @@ public class FormUsuario extends javax.swing.JDialog {
     FormCadUsuario formCadU;
     FormPrincipal formP;
     DAOUsuario daoU;
-
+    
+    /**
+     * Creates new form FormUsuario
+     *
+     * @param parent
+     * @param modal
+     */
+    public FormUsuario(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+        atualizaTabela();
+    }
+    
     /**
      * Método que atualiza os dados na tabela Percorre a minha lista de usuarios
      * da classe DAOUsuario Usando a classe DefaultTableModel e o método addRow,
@@ -36,17 +49,31 @@ public class FormUsuario extends javax.swing.JDialog {
         }
 
     }
-
+    
     /**
-     * Creates new form FormUsuario
-     *
-     * @param parent
-     * @param modal
+     * Metodo onde removo todas as linhas da tabela
      */
-    public FormUsuario(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        atualizaTabela();
+    public void limparTabela(){
+        DefaultTableModel tableUsers = (DefaultTableModel) tblUsuario.getModel();
+        while(tableUsers.getRowCount() > 0){
+            tableUsers.removeRow(0);
+            
+        }
+    }
+    
+    /**
+     * Metodo onde listo apenas o conteudo pesquisado usando o filtro Id
+     */
+    public void atualizaTabelaId() {
+        DefaultTableModel tableUsers = (DefaultTableModel) tblUsuario.getModel();
+        limparTabela();
+        daoU = new DAOUsuario();
+        int id = Integer.parseInt(txtFiltros.getText());
+        for (Usuario user : daoU.readId(id)) {
+            tableUsers.addRow(new Object[]{user.getId(), user.getNomeCompleto(), 
+                                           user.getIniciais(), user.getUsuario()});
+        }
+
     }
 
     /**
@@ -99,8 +126,18 @@ public class FormUsuario extends javax.swing.JDialog {
         cbxFiltros.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "...", "Id", "Nome", "Usuario" }));
 
         btnPesquisar.setText("Pesquisar");
+        btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisarActionPerformed(evt);
+            }
+        });
 
         btnLimpar.setText("Limpar");
+        btnLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparActionPerformed(evt);
+            }
+        });
 
         btnIncluir.setText("Incluir");
         btnIncluir.addActionListener(new java.awt.event.ActionListener() {
@@ -254,6 +291,26 @@ public class FormUsuario extends javax.swing.JDialog {
         
         tableUsers.removeRow(linhaSelecionada);
     }//GEN-LAST:event_btnExcluirActionPerformed
+
+    /**
+     * Função que limpa os filtros selecionados e o campo de digitar texto.
+     * @param evt 
+     */
+    private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
+        txtFiltros.setText("");
+        cbxFiltros.setSelectedIndex(0);
+    }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
+        daoU = new DAOUsuario();
+        
+        if(cbxFiltros.getSelectedIndex() == 0){
+            JOptionPane.showMessageDialog(this, "Nenhum filtro selecionado!");
+        } else if(cbxFiltros.getSelectedIndex() == 1){
+            atualizaTabelaId();
+        }
+        
+    }//GEN-LAST:event_btnPesquisarActionPerformed
 
     /**
      * @param args the command line arguments

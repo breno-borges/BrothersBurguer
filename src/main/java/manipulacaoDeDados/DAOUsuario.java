@@ -185,4 +185,40 @@ public class DAOUsuario {
 
         return usuarios;
     }
+    
+    /**
+     * Metodo de busca dos usuarios pelo Id, SELECT
+     *
+     * @return List usuarios
+     */
+    public List<Usuario> readId(int id) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        List<Usuario> usuarios = new ArrayList<>();
+
+        try {
+            stmt = con.prepareStatement("SELECT * FROM usuarios WHERE id = ?");
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                Usuario usuario = new Usuario();
+                usuario.setId(rs.getInt("id"));
+                usuario.setNomeCompleto(rs.getString("nome"));
+                usuario.setIniciais(rs.getString("iniciais"));
+                usuario.setUsuario(rs.getString("usuario"));
+                usuario.setSenha(rs.getString("senha"));
+
+                usuarios.add(usuario);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao carregar usuários!");
+        } finally {
+            ConnectionFactory.closeConnection(con, stmt, rs);
+        }
+
+        return usuarios;
+    }
 }
